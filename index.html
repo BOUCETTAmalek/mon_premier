@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>CYCLONOVA — Atelier Pro v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Barlow+Condensed:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#111214; --bg2:#18191d; --bg3:#1e2025;
+  --panel:#22242a; --panel2:#2a2d35;
+  --border:#33363f; --border2:#444750;
+  --orange:#f06000; --orange2:#ff7c20; --orange3:#1f1208; --orange4:#2d1a08;
+  --yellow:#f5a623; --green:#2ecc71; --green2:rgba(46,204,113,0.12);
+  --red:#e74c3c; --red2:rgba(231,76,60,0.1); --blue:#3498db;
+  --white:#e8eaed; --muted:#7a7f8a; --muted2:#555a66;
+  --qc-color:#a855f7; --qc-bg:rgba(168,85,247,0.1); --qc-bd:rgba(168,85,247,0.3);
+  --pending-color:#f59e0b; --pending-bg:rgba(245,158,11,0.1); --pending-bd:rgba(245,158,11,0.3);
+
+  --vert-c:#2ecc71;  --vert-bg:rgba(46,204,113,0.08);  --vert-bd:rgba(46,204,113,0.3);
+  --jaune-c:#f5a623; --jaune-bg:rgba(245,166,35,0.08); --jaune-bd:rgba(245,166,35,0.3);
+  --orng-c:#e67e22;  --orng-bg:rgba(230,126,34,0.08);  --orng-bd:rgba(230,126,34,0.3);
+  --rouge-c:#e74c3c; --rouge-bg:rgba(231,76,60,0.08);  --rouge-bd:rgba(231,76,60,0.3);
+  --rz-c:#c0392b;    --rz-bg:rgba(192,57,43,0.1);      --rz-bd:rgba(192,57,43,0.35);
+
+  --shadow:0 2px 8px rgba(0,0,0,0.4),0 1px 2px rgba(0,0,0,0.3);
+  --shadow-o:0 4px 20px rgba(240,96,0,0.2),0 2px 6px rgba(0,0,0,0.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Barlow Condensed',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;overflow-x:hidden;}
+
+/* ── SCREENS ── */
+.screen{display:none;min-height:100vh;}
+.screen.active{display:block;}
+
+/* ══ LOGIN ══ */
+#loginScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:radial-gradient(ellipse at 50% 40%,#1e1208 0%,var(--bg) 65%);padding:20px;}
+.login-icon{font-size:52px;display:block;margin-bottom:14px;filter:drop-shadow(0 0 16px rgba(240,96,0,0.5));text-align:center;}
+.login-brand{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:800;letter-spacing:6px;color:var(--white);text-transform:uppercase;line-height:1;text-align:center;}
+.login-brand em{color:var(--orange);font-style:normal;}
+.login-tagline{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:3px;margin-top:6px;margin-bottom:28px;text-transform:uppercase;text-align:center;}
+.login-card{background:var(--panel);border:1px solid var(--border2);border-top:3px solid var(--orange);box-shadow:var(--shadow-o);padding:28px 24px;width:100%;max-width:400px;}
+.login-card-title{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:3px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--border);}
+.role-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:18px;}
+.role-tile{background:var(--bg2);border:1.5px solid var(--border);padding:14px 8px;text-align:center;cursor:pointer;transition:all .15s;border-radius:4px;}
+.role-tile:hover{border-color:var(--orange2);background:var(--orange3);}
+.role-tile.sel{border-color:var(--orange);background:var(--orange3);box-shadow:0 0 12px rgba(240,96,0,.2);}
+.role-tile.sel-qc{border-color:var(--qc-color);background:var(--qc-bg);box-shadow:0 0 12px var(--qc-bd);}
+.role-tile-icon{font-size:24px;display:block;margin-bottom:6px;}
+.role-tile-name{font-size:11px;font-weight:700;color:var(--white);}
+.field{margin-bottom:12px;}
+.field label{display:block;font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.fi{width:100%;background:var(--bg);border:1.5px solid var(--border);color:var(--white);padding:10px 12px;font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:500;outline:none;border-radius:3px;transition:border-color .15s;}
+.fi:focus{border-color:var(--orange);background:var(--bg2);}
+.btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;padding:10px 18px;border:none;border-radius:3px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:7px;}
+.btn:hover{transform:translateY(-1px);}
+.btn:active{transform:translateY(0);}
+.btn-primary{background:var(--orange);color:#fff;}
+.btn-primary:hover{background:var(--orange2);box-shadow:0 4px 16px rgba(240,96,0,.4);}
+.btn-ghost{background:var(--panel2);color:var(--muted);border:1px solid var(--border);}
+.btn-ghost:hover{color:var(--white);border-color:var(--border2);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-green{background:var(--green);color:#000;}
+.btn-purple{background:var(--qc-color);color:#fff;}
+.btn-sm{font-size:12px;padding:6px 12px;}
+.btn-xs{font-size:11px;padding:4px 9px;}
+
+/* ══ TOPBAR ══ */
+.topbar{height:54px;background:var(--panel);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.3);padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.topbar-brand{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:3px;}
+.topbar-brand em{color:var(--orange);font-style:normal;}
+.tbadge{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 7px;border-radius:2px;margin-left:8px;}
+.tbadge.admin{background:var(--orange3);color:var(--orange);border:1px solid rgba(240,96,0,.3);}
+.tbadge.qc{background:var(--qc-bg);color:var(--qc-color);border:1px solid var(--qc-bd);}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:livePulse 2s ease-in-out infinite;display:inline-block;margin-right:5px;}
+@keyframes livePulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(46,204,113,.4)}50%{opacity:.7;box-shadow:0 0 0 4px rgba(46,204,113,0)}}
+.topbar-kpis{display:flex;gap:16px;}
+.tkpi{text-align:center;}
+.tkpi-v{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;line-height:1;color:var(--orange);}
+.tkpi-v.g{color:var(--green);}
+.tkpi-v.p{color:var(--qc-color);}
+.tkpi-l{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:1px;}
+.topbar-right{display:flex;align-items:center;gap:8px;}
+
+/* ══ LAYOUT ══ */
+.app-layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 54px);}
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column;}
+.nav-sec{padding:16px 12px 8px;}
+.nav-sec-title{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted2);letter-spacing:2px;text-transform:uppercase;padding-bottom:6px;margin-bottom:6px;border-bottom:1px solid var(--border);}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:3px;cursor:pointer;font-size:13px;font-weight:600;letter-spacing:1px;color:var(--muted);transition:all .15s;margin-bottom:2px;}
+.nav-item:hover{background:var(--panel);color:var(--white);}
+.nav-item.on{background:var(--orange3);color:var(--orange);border-left:3px solid var(--orange);padding-left:7px;}
+.nav-item.qc-on{background:var(--qc-bg);color:var(--qc-color);border-left:3px solid var(--qc-color);padding-left:7px;}
+.nav-icon{font-size:15px;width:18px;text-align:center;}
+.side-lvls{padding:0 12px 12px;}
+.slv-row{padding:5px 0;border-bottom:1px solid var(--bg3);}
+.slv-row:last-child{border-bottom:none;}
+.slv-top{display:flex;align-items:center;gap:7px;margin-bottom:3px;}
+.slv-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.slv-name{font-size:12px;font-weight:600;flex:1;}
+.slv-num{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);}
+.slv-bar{height:3px;background:var(--border);border-radius:2px;}
+.slv-fill{height:100%;border-radius:2px;transition:width .5s;}
+.side-bottom{padding:12px;border-top:1px solid var(--border);margin-top:auto;}
+.sbt-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dashed var(--border);}
+.sbt-row:last-child{border-bottom:none;}
+.sbt-l{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);}
+.sbt-v{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--orange);}
+.s-foot{padding:8px 12px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted2);border-top:1px solid var(--border);text-align:center;}
+
+/* ══ CONTENT ══ */
+.main-content{overflow-y:auto;background:var(--bg);}
+.cview{display:none;padding:20px;}
+.cview.on{display:block;}
+.vhd{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+.vhd-title{font-size:22px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
+.vhd-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-top:3px;}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;}
+.fbtn{padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--panel);font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s;letter-spacing:1px;}
+.fbtn:hover,.fbtn.on{border-color:var(--orange);color:var(--orange);background:var(--orange3);}
+
+/* ══ MECHANIC CARD ══ */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.mcard{background:var(--panel);border:1px solid var(--border);border-radius:4px;box-shadow:var(--shadow);overflow:hidden;transition:border-color .2s,transform .15s,box-shadow .2s;}
+.mcard:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:var(--shadow-o);}
+.mcard-stripe{height:3px;background:linear-gradient(90deg,var(--orange),var(--orange2));}
+.mcard-stripe.busy{background:linear-gradient(90deg,var(--green),#27ae60);}
+.mcard-stripe.pause{background:linear-gradient(90deg,var(--yellow),#e67e22);}
+.mcard-stripe.free{background:var(--border);}
+.mcard-hd{padding:12px 14px 10px;display:flex;align-items:flex-start;justify-content:space-between;background:var(--panel2);border-bottom:1px solid var(--border);}
+.mcard-av{width:40px;height:40px;background:var(--bg2);border:1px solid var(--border2);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.mcard-inf{margin-left:10px;flex:1;}
+.mcard-nm{font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;line-height:1.1;}
+.mcard-ttl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--yellow);margin-top:3px;}
+.st-pill{display:flex;align-items:center;gap:4px;padding:3px 9px;border-radius:2px;border:1px solid;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;}
+.st-pill.libre{color:var(--green);border-color:var(--green2);background:rgba(46,204,113,.07);}
+.st-pill.occupe{color:var(--orange);border-color:rgba(240,96,0,.4);background:var(--orange3);}
+.st-pill.pause{color:var(--yellow);border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.07);}
+.s-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+/* XP */
+.mcard-xp{padding:7px 14px;background:var(--bg2);border-bottom:1px solid var(--border);}
+.xp-row{display:flex;align-items:center;gap:8px;}
+.xp-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);min-width:55px;}
+.xp-track{flex:1;height:5px;background:var(--bg);border:1px solid var(--border);border-radius:1px;overflow:hidden;}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width .5s;}
+.xp-next{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--yellow);min-width:40px;text-align:right;}
+
+/* PROGRESS */
+.mcard-prog{padding:8px 14px 6px;}
+.prog-row{display:flex;align-items:center;gap:8px;}
+.prog-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);}
+.prog-nn{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;}
+.pn-d{color:var(--orange);}
+.pn-s{color:var(--muted2);margin:0 1px;}
+.pn-t{color:var(--muted);}
+.prog-bar{flex:1;height:5px;background:var(--bg);border:1px solid var(--border);overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange2));transition:width .5s;}
+.prog-fill.full{background:linear-gradient(90deg,var(--green),#27ae60);}
+.prog-pct{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--orange);min-width:32px;text-align:right;}
+.prog-pct.ok{color:var(--green);}
+
+/* QC pending badge on card */
+.qc-pending-badge{display:inline-flex;align-items:center;gap:4px;font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 7px;border-radius:2px;background:var(--qc-bg);color:var(--qc-color);border:1px solid var(--qc-bd);margin-left:8px;}
+
+/* ══ BIKE LIST ══ */
+.mcard-bikes{padding:8px 14px;}
+.bikes-hd{display:flex;justify-content:space-between;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding-bottom:5px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+.bike-item{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--bg2);}
+.bike-item:last-child{border-bottom:none;}
+
+/* Color+ID combined badge */
+.bike-label{display:flex;align-items:center;gap:4px;flex:1;}
+.bike-clr{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 6px;border-radius:2px;border:1px solid;min-width:48px;text-align:center;flex-shrink:0;}
+.bike-clr.vert  {color:var(--vert-c);border-color:var(--vert-bd);background:var(--vert-bg);}
+.bike-clr.jaune {color:var(--jaune-c);border-color:var(--jaune-bd);background:var(--jaune-bg);}
+.bike-clr.orange{color:var(--orng-c);border-color:var(--orng-bd);background:var(--orng-bg);}
+.bike-clr.rouge {color:var(--rouge-c);border-color:var(--rouge-bd);background:var(--rouge-bg);}
+.bike-clr.rz    {color:var(--rz-c);border-color:var(--rz-bd);background:var(--rz-bg);}
+.bike-id-txt{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--white);font-weight:700;}
+.bike-type-tag{font-family:'Share Tech Mono',monospace;font-size:9px;padding:1px 5px;border-radius:2px;border:1px solid;flex-shrink:0;}
+.bike-type-tag.qc {color:#60a5fa;border-color:rgba(96,165,250,.3);background:rgba(96,165,250,.06);}
+.bike-type-tag.sav{color:var(--orange2);border-color:rgba(240,96,0,.3);background:var(--orange3);}
+.bike-type-tag.zo {color:var(--red);border-color:rgba(231,76,60,.3);background:var(--red2);}
+
+/* ── CHECKBOX BUTTON ── */
+.check-btn{
+  width:26px;height:26px;border-radius:3px;
+  border:2px solid var(--border2);background:var(--bg);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:13px;transition:all .12s;flex-shrink:0;
+  color:transparent;
+}
+.check-btn:hover{border-color:var(--orange);background:var(--orange3);}
+.check-btn.checked{border-color:var(--pending-color);background:var(--pending-bg);color:var(--pending-color);}
+.check-btn.validated{border-color:var(--green);background:var(--green2);color:var(--green);}
+.check-btn.blocked{border-color:var(--red);background:var(--red2);color:var(--red);}
+
+/* STATUS INDICATOR dot beside check */
+.bike-status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.bike-status-dot.todo{background:var(--border2);}
+.bike-status-dot.pending{background:var(--pending-color);}
+.bike-status-dot.validated{background:var(--green);}
+.bike-status-dot.blocked{background:var(--red);}
+
+.bike-del{width:18px;height:18px;border:none;background:none;color:var(--muted2);cursor:pointer;font-size:11px;transition:color .12s;border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bike-del:hover{color:var(--red);background:var(--red2);}
+
+.no-bikes{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted2);padding:12px 0;text-align:center;}
+.add-mis-btn{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:6px;background:none;border:1px dashed var(--border2);border-radius:3px;color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-top:7px;transition:all .15s;letter-spacing:1px;}
+.add-mis-btn:hover{border-color:var(--orange);color:var(--orange);background:var(--orange3);}
+
+.mcard-ft{background:var(--bg2);border-top:1px solid var(--border);padding:7px 14px;display:flex;justify-content:space-between;align-items:center;}
+.mft-xp{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--yellow);}
+.mft-rt{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;}
+.mft-rt.ok{color:var(--green);}
+.mft-rt.mid{color:var(--yellow);}
+.mft-rt.low{color:var(--red);}
+
+/* ══ QC VIEW ══ */
+.qc-queue{display:flex;flex-direction:column;gap:10px;}
+.qc-card{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--pending-color);border-radius:4px;padding:14px 16px;display:flex;align-items:center;gap:14px;transition:all .15s;}
+.qc-card:hover{border-color:var(--border2);background:var(--panel2);}
+.qc-card-info{flex:1;}
+.qc-card-top{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.qc-mech-name{font-size:15px;font-weight:800;letter-spacing:1px;}
+.qc-bike-badge{display:flex;align-items:center;gap:5px;background:var(--bg2);padding:4px 10px;border-radius:3px;border:1px solid var(--border2);}
+.qc-bike-clr{font-family:'Share Tech Mono',monospace;font-size:10px;padding:2px 6px;border-radius:2px;border:1px solid;}
+.qc-bike-id{font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:700;}
+.qc-card-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);}
+.qc-actions{display:flex;gap:8px;}
+.qc-validate-btn{display:flex;align-items:center;gap:6px;padding:10px 16px;border:none;border-radius:3px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;transition:all .15s;}
+.qc-validate-btn.ok{background:var(--green);color:#000;}
+.qc-validate-btn.ok:hover{background:#27ae60;transform:translateY(-1px);}
+.qc-validate-btn.ko{background:var(--red);color:#fff;}
+.qc-validate-btn.ko:hover{background:#c0392b;transform:translateY(-1px);}
+
+.qc-empty{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:48px;text-align:center;}
+.qc-empty-icon{font-size:48px;display:block;margin-bottom:14px;}
+.qc-empty-txt{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);}
+
+.qc-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+.qc-stat{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:16px;text-align:center;}
+.qc-stat-val{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;line-height:1;margin-bottom:4px;}
+.qc-stat-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);}
+
+/* ══ STATS ══ */
+.stats-kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
+.kpi-card{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:16px;box-shadow:var(--shadow);}
+.kpi-card-val{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;line-height:1;margin-bottom:5px;}
+.kpi-card-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);}
+.lb{background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden;box-shadow:var(--shadow);}
+.lb-hd{padding:12px 18px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;}
+.lb-hd-t{font-size:15px;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.lb-row{display:flex;align-items:center;gap:10px;padding:10px 18px;border-bottom:1px solid var(--bg2);transition:background .15s;}
+.lb-row:last-child{border-bottom:none;}
+.lb-row:hover{background:var(--bg2);}
+.lb-rank{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;min-width:28px;}
+.lb-rank.gold{color:var(--yellow);}
+.lb-rank.silver{color:#b0b8c8;}
+.lb-rank.bronze{color:#cd7f32;}
+.lb-av{font-size:20px;width:32px;text-align:center;}
+.lb-nm{font-size:15px;font-weight:700;letter-spacing:1px;flex:1;}
+.lb-lv{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--yellow);min-width:50px;}
+.lb-bar-w{width:100px;}
+.lb-bar{height:5px;background:var(--bg);border:1px solid var(--border);border-radius:1px;overflow:hidden;}
+.lb-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width .5s;}
+.lb-xp{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--orange);min-width:70px;text-align:right;}
+
+/* ══ MANAGE ══ */
+.manage-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;}
+.manage-card{background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:16px;text-align:center;box-shadow:var(--shadow);transition:border-color .15s;}
+.manage-card:hover{border-color:var(--border2);}
+.manage-av{font-size:34px;margin-bottom:8px;}
+.manage-nm{font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.manage-lv{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--yellow);margin-bottom:10px;}
+.manage-btns{display:flex;gap:7px;justify-content:center;}
+
+/* ══ PLAYER SCREEN ══ */
+#mechScreen{background:var(--bg);}
+.player-hdr{background:var(--panel);border-bottom:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.3);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;}
+.player-profile{display:flex;align-items:center;gap:12px;}
+.player-av{font-size:26px;width:46px;height:46px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;justify-content:center;}
+.player-nm{font-size:20px;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
+.player-ttl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--yellow);margin-top:2px;}
+.player-hud{display:flex;gap:16px;align-items:center;}
+.ph-stat{text-align:center;}
+.ph-v{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;line-height:1;color:var(--orange);}
+.ph-l{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);margin-top:1px;}
+
+.xp-banner{background:var(--bg2);border-bottom:1px solid var(--border);padding:9px 20px;display:flex;align-items:center;gap:12px;}
+.xp-lvl-badge{font-family:'Share Tech Mono',monospace;font-size:10px;background:var(--orange);color:#000;padding:4px 9px;font-weight:700;border-radius:2px;white-space:nowrap;}
+.xp-lbl-big{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);white-space:nowrap;min-width:90px;}
+.xp-track-big{flex:1;height:11px;background:var(--bg);border:1px solid var(--border);border-radius:2px;overflow:hidden;}
+.xp-fill-big{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));transition:width .8s ease;}
+.xp-pct-lbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--yellow);min-width:36px;text-align:right;}
+
+.player-layout{display:grid;grid-template-columns:1fr 290px;gap:18px;padding:18px 20px;}
+
+/* MISSIONS (player) */
+.missions-title{font-size:17px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px;}
+.mission-card{background:var(--panel);border:1px solid var(--border);border-left:3px solid var(--border);border-radius:3px;margin-bottom:9px;overflow:hidden;transition:border-color .15s;}
+.mission-card.pending  {border-left-color:var(--pending-color);}
+.mission-card.validated{border-left-color:var(--green);opacity:.75;}
+.mission-card.blocked  {border-left-color:var(--red);}
+.mc-top{background:var(--panel2);padding:9px 13px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+.mc-lv{font-family:'Share Tech Mono',monospace;font-size:9px;padding:2px 6px;border-radius:2px;border:1px solid;flex-shrink:0;}
+.mc-id-badge{font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:700;flex:1;}
+.mc-xp-badge{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--yellow);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);padding:2px 7px;border-radius:2px;}
+.mc-body{padding:10px 13px;display:flex;align-items:center;gap:10px;}
+.mc-desc{font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:500;color:var(--muted);flex:1;}
+
+/* BIG CHECKBOX for player */
+.big-check{
+  width:38px;height:38px;border-radius:4px;
+  border:2px solid var(--border2);background:var(--bg);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:18px;transition:all .15s;flex-shrink:0;
+  color:transparent;
+}
+.big-check:hover:not(.validated):not(.pending){border-color:var(--orange);background:var(--orange3);}
+.big-check.pending  {border-color:var(--pending-color);background:var(--pending-bg);color:var(--pending-color);}
+.big-check.validated{border-color:var(--green);background:var(--green2);color:var(--green);}
+.big-check.blocked  {border-color:var(--red);background:var(--red2);color:var(--red);}
+
+.mc-status-txt{font-family:'Share Tech Mono',monospace;font-size:10px;min-width:80px;text-align:center;}
+.mc-status-txt.pending  {color:var(--pending-color);}
+.mc-status-txt.validated{color:var(--green);}
+.mc-status-txt.blocked  {color:var(--red);}
+.mc-status-txt.todo     {color:var(--muted);}
+
+.no-missions{background:var(--panel);border:1px solid var(--border);padding:40px;text-align:center;border-radius:4px;}
+.no-mis-icon{font-size:36px;display:block;margin-bottom:10px;filter:grayscale(.5);}
+.no-mis-txt{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);}
+
+/* RIGHT COL */
+.right-col{display:flex;flex-direction:column;gap:12px;}
+.panel-card{background:var(--panel);border:1px solid var(--border);border-radius:4px;overflow:hidden;box-shadow:var(--shadow);}
+.pc-hd{background:var(--panel2);padding:9px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;}
+.pc-title{font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.sc-row{display:flex;justify-content:space-between;align-items:center;padding:7px 13px;border-bottom:1px solid var(--bg2);}
+.sc-row:last-child{border-bottom:none;}
+.sc-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted);}
+.sc-val{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;}
+.sc-val.hi{color:var(--green);}
+.sc-val.yw{color:var(--yellow);}
+.sc-val.or{color:var(--orange);}
+.sc-val.pu{color:var(--qc-color);}
+.lbm-row{display:flex;align-items:center;gap:7px;padding:7px 13px;border-bottom:1px solid var(--bg2);transition:background .12s;}
+.lbm-row:last-child{border-bottom:none;}
+.lbm-row:hover{background:var(--bg2);}
+.lbm-row.me{background:var(--orange3);border-left:2px solid var(--orange);padding-left:11px;}
+.lbm-rank{font-size:12px;min-width:20px;}
+.lbm-av{font-size:14px;}
+.lbm-nm{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;flex:1;}
+.lbm-xp{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--yellow);}
+.ach-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+.ach-cell{background:var(--panel);padding:9px;text-align:center;transition:background .12s;}
+.ach-cell:hover{background:var(--panel2);}
+.ach-cell.unlocked{background:rgba(245,166,35,.04);}
+.ach-emoji{font-size:20px;display:block;margin-bottom:3px;filter:grayscale(1) brightness(.5);}
+.ach-cell.unlocked .ach-emoji{filter:none;}
+.ach-nm{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--muted2);}
+.ach-cell.unlocked .ach-nm{color:var(--yellow);}
+
+/* ══ QC PLAYER VIEW ══ */
+.qc-player-layout{padding:18px 20px;}
+.qc-banner{background:var(--qc-bg);border:1px solid var(--qc-bd);border-radius:4px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.qc-banner-icon{font-size:28px;}
+.qc-banner-txt .t{font-size:16px;font-weight:800;letter-spacing:1px;color:var(--qc-color);}
+.qc-banner-txt .s{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-top:3px;}
+
+/* ══ MODAL ══ */
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(3px);z-index:200;display:none;align-items:center;justify-content:center;padding:16px;}
+.ovl.open{display:flex;}
+.modal-card{background:var(--panel);border:1px solid var(--border2);border-top:3px solid var(--orange);box-shadow:0 20px 50px rgba(0,0,0,.5),0 0 30px rgba(240,96,0,.1);padding:24px 20px;width:100%;max-width:420px;border-radius:4px;animation:modalIn .2s ease;max-height:90vh;overflow-y:auto;}
+.modal-card.green-top{border-top-color:var(--green);}
+.modal-card.purple-top{border-top-color:var(--qc-color);}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.modal-title{font-size:18px;font-weight:800;letter-spacing:2px;text-transform:uppercase;margin-bottom:3px;}
+.modal-sub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);margin-bottom:16px;}
+.modal-btns{display:flex;gap:9px;margin-top:18px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;z-index:500;background:var(--panel);border:1px solid var(--border2);border-left:3px solid var(--green);padding:12px 16px;max-width:280px;border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.4);transform:translateX(350px);transition:transform .3s ease;}
+.toast.show{transform:translateX(0);}
+.toast.warn{border-left-color:var(--red);}
+.toast.info{border-left-color:var(--qc-color);}
+.toast-title{font-size:12px;font-weight:700;letter-spacing:1px;color:var(--green);margin-bottom:3px;}
+.toast.warn .toast-title{color:var(--red);}
+.toast.info .toast-title{color:var(--qc-color);}
+.toast-msg{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--muted);}
+
+/* XP FLOAT */
+@keyframes floatUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-50px)}}
+.xp-float{position:fixed;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:800;color:var(--yellow);pointer-events:none;z-index:300;animation:floatUp 1.2s ease forwards;}
+
+/* LEVEL UP */
+.lvlup-ovl{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:400;display:none;align-items:center;justify-content:center;padding:16px;}
+.lvlup-ovl.show{display:flex;}
+.lvlup-box{background:var(--panel);border:2px solid var(--yellow);border-radius:4px;padding:36px 28px;text-align:center;box-shadow:0 0 60px rgba(245,166,35,.3);animation:popIn .3s ease;max-width:380px;width:100%;}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.lvlup-icon{font-size:48px;display:block;margin-bottom:14px;}
+.lvlup-title{font-size:24px;font-weight:800;letter-spacing:4px;color:var(--yellow);margin-bottom:8px;}
+.lvlup-sub{font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--white);margin-bottom:20px;}
+
+/* AV PICKER */
+.av-picker{display:flex;gap:7px;flex-wrap:wrap;margin-top:6px;}
+.av-opt{font-size:20px;padding:7px;border:1px solid var(--border);border-radius:3px;background:var(--bg);cursor:pointer;transition:all .12s;}
+.av-opt:hover{border-color:var(--orange2);background:var(--orange3);}
+.av-opt.picked{border-color:var(--green);background:rgba(46,204,113,.08);}
+
+/* ══════════════════════════════════════
+   MOBILE RESPONSIVE
+══════════════════════════════════════ */
+@media(max-width:768px){
+  /* LOGIN */
+  #loginScreen{padding:24px 14px;justify-content:flex-start;padding-top:36px;}
+  .login-brand{font-size:28px;}
+  .login-card{padding:18px 14px;}
+  .role-grid{grid-template-columns:1fr 1fr 1fr;gap:6px;}
+  .role-tile{padding:12px 6px;}
+  .role-tile-icon{font-size:20px;}
+  .role-tile-name{font-size:10px;}
+
+  /* TOPBAR */
+  .topbar{padding:0 10px;height:auto;flex-wrap:wrap;gap:6px;padding:8px 10px;}
+  .topbar-brand{font-size:17px;}
+  .topbar-kpis{gap:10px;}
+  .tkpi-v{font-size:16px;}
+
+  /* LAYOUT → bottom nav */
+  .app-layout{grid-template-columns:1fr;grid-template-rows:1fr auto;}
+  .sidebar{order:2;flex-direction:row;overflow-x:auto;overflow-y:hidden;border-right:none;border-top:1px solid var(--border);padding:0;height:54px;min-height:54px;position:sticky;bottom:0;z-index:50;background:var(--panel);}
+  .nav-sec{display:flex;flex-direction:row;padding:0;flex:1;}
+  .nav-sec-title{display:none;}
+  .nav-item{flex:1;flex-direction:column;gap:2px;padding:6px 4px;border-left:none;border-top:3px solid transparent;justify-content:center;align-items:center;font-size:8px;letter-spacing:0;min-width:54px;border-radius:0;}
+  .nav-item.on{background:var(--orange3);border-top-color:var(--orange);border-left:none;padding-left:4px;}
+  .nav-item.qc-on{background:var(--qc-bg);border-top-color:var(--qc-color);border-left:none;padding-left:4px;}
+  .nav-icon{font-size:16px;width:auto;}
+  .nav-sec:last-of-type{display:none;}
+  .side-bottom,.s-foot{display:none;}
+
+  .main-content{min-height:calc(100vh - 54px - 54px);}
+  .cview{padding:14px 12px;}
+  .vhd{flex-direction:column;gap:8px;align-items:flex-start;}
+  .vhd-title{font-size:17px;}
+  .mgrid{grid-template-columns:1fr;gap:10px;}
+
+  /* QC STATS */
+  .qc-stats-row{grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .qc-stat-val{font-size:24px;}
+  .qc-card{flex-wrap:wrap;gap:10px;}
+  .qc-actions{width:100%;justify-content:flex-end;}
+
+  /* STATS */
+  .stats-kpis{grid-template-columns:1fr 1fr;gap:8px;}
+  .kpi-card-val{font-size:26px;}
+  .lb-row{padding:8px 12px;gap:7px;}
+  .lb-bar-w,.lb-lv{display:none;}
+  .manage-grid{grid-template-columns:1fr 1fr;gap:8px;}
+
+  /* PLAYER */
+  .player-hdr{padding:8px 12px;flex-wrap:wrap;gap:8px;}
+  .player-nm{font-size:16px;}
+  .player-hud{gap:10px;}
+  .ph-v{font-size:17px;}
+  .xp-banner{padding:7px 12px;gap:8px;}
+  .xp-lbl-big{min-width:auto;font-size:9px;}
+  .xp-pct-lbl{display:none;}
+  .player-layout{grid-template-columns:1fr;gap:12px;padding:12px;}
+  .right-col{gap:10px;}
+  .missions-title{font-size:14px;}
+  .mc-top{padding:7px 12px;gap:6px;}
+  .mc-body{padding:9px 12px;flex-wrap:wrap;gap:7px;}
+  .big-check{width:44px;height:44px;font-size:20px;}
+  .mc-status-txt{width:100%;text-align:left;}
+  .ach-grid{grid-template-columns:repeat(3,1fr);}
+  .toast{bottom:66px;right:10px;left:10px;max-width:none;}
+  .qc-player-layout{padding:12px;}
+  .modal-card{padding:18px 14px;}
+}
+
+@media(max-width:380px){
+  .login-brand{font-size:22px;}
+  .topbar-brand{font-size:14px;}
+  .vhd-title{font-size:14px;}
+  .manage-grid{grid-template-columns:1fr;}
+  .stats-kpis{grid-template-columns:1fr 1fr;}
+  .qc-stats-row{grid-template-columns:1fr;}
+}
+
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--panel2);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:var(--orange);}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="toast-title" id="toastTitle">OK</div><div class="toast-msg" id="toastMsg">—</div></div>
+
+<!-- LEVEL UP -->
+<div class="lvlup-ovl" id="lvlOvl">
+  <div class="lvlup-box">
+    <span class="lvlup-icon">🏆</span>
+    <div class="lvlup-title">NIVEAU SUPÉRIEUR !</div>
+    <div class="lvlup-sub" id="lvlupMsg">Félicitations !</div>
+    <button class="btn btn-primary" onclick="document.getElementById('lvlOvl').classList.remove('show')">Continuer →</button>
+  </div>
+</div>
+
+<!-- MODAL ASSIGN -->
+<div class="ovl" id="ovlAssign">
+  <div class="modal-card">
+    <div class="modal-title">Assigner un vélo</div>
+    <div class="modal-sub">Couleur + ID obligatoires</div>
+    <div class="field"><label>Mécanicien</label><select class="fi" id="aMech"></select></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="field">
+        <label>Couleur</label>
+        <select class="fi" id="aClr">
+          <option value="vert">🟢 Vert</option>
+          <option value="jaune">🟡 Jaune</option>
+          <option value="orange">🟠 Orange</option>
+          <option value="rouge">🔴 Rouge</option>
+          <option value="rz">⛔ Redzone</option>
+        </select>
+      </div>
+      <div class="field"><label>N° Vélo</label><input class="fi" id="aId" placeholder="ex: MQ76" oninput="this.value=this.value.toUpperCase()"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="field"><label>Type</label>
+        <select class="fi" id="aTy">
+          <option value="">Standard</option>
+          <option value="qc">QC</option>
+          <option value="sav">SAV</option>
+          <option value="zo">Zone Orange</option>
+        </select>
+      </div>
+      <div class="field"><label>Priorité</label>
+        <select class="fi" id="aPri">
+          <option value="normal">Normale</option>
+          <option value="urgent">🔥 Urgente</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost btn-sm" onclick="closeOvl('ovlAssign')">Annuler</button>
+      <button class="btn btn-primary btn-sm" onclick="submitAssign()">Confirmer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ADD MECH -->
+<div class="ovl" id="ovlAddMech">
+  <div class="modal-card green-top">
+    <div class="modal-title" style="color:var(--green)">Nouveau mécanicien</div>
+    <div class="modal-sub">Inscris un nouveau membre de l'équipe</div>
+    <div class="field"><label>Prénom</label><input class="fi" id="nmName" placeholder="Prénom"></div>
+    <div class="field"><label>Email</label><input class="fi" id="nmEmail" placeholder="prenom@cyclonova.fr" type="email"></div>
+    <div class="field"><label>Mot de passe</label><input class="fi" id="nmPass" placeholder="••••••••" type="password"></div>
+    <div class="field"><label>Avatar</label>
+      <div class="av-picker" id="avPicker">
+        <span class="av-opt picked" data-av="👨‍🔧" onclick="pickAv(this)">👨‍🔧</span>
+        <span class="av-opt" data-av="👩‍🔧" onclick="pickAv(this)">👩‍🔧</span>
+        <span class="av-opt" data-av="🔧" onclick="pickAv(this)">🔧</span>
+        <span class="av-opt" data-av="🛠️" onclick="pickAv(this)">🛠️</span>
+        <span class="av-opt" data-av="⚙️" onclick="pickAv(this)">⚙️</span>
+        <span class="av-opt" data-av="🚴" onclick="pickAv(this)">🚴</span>
+        <span class="av-opt" data-av="🏍️" onclick="pickAv(this)">🏍️</span>
+        <span class="av-opt" data-av="🥷" onclick="pickAv(this)">🥷</span>
+      </div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost btn-sm" onclick="closeOvl('ovlAddMech')">Annuler</button>
+      <button class="btn btn-green btn-sm" onclick="submitNewMech()">Créer →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════
+     LOGIN
+════════════════════════ -->
+<div class="screen active" id="loginScreen">
+  <span class="login-icon">🔩</span>
+  <div class="login-brand">CYCLO<em>NOVA</em></div>
+  <div class="login-tagline">Atelier Pro — Système de gestion v2</div>
+  <div class="login-card">
+    <div class="login-card-title">Connexion — Choisir un rôle</div>
+    <div class="role-grid">
+      <div class="role-tile" id="rAdmin" onclick="selectRole('admin')">
+        <span class="role-tile-icon">👑</span>
+        <span class="role-tile-name">Admin</span>
+      </div>
+      <div class="role-tile" id="rMech" onclick="selectRole('mech')">
+        <span class="role-tile-icon">🔧</span>
+        <span class="role-tile-name">Mécanicien</span>
+      </div>
+      <div class="role-tile" id="rQC" onclick="selectRole('qc')">
+        <span class="role-tile-icon">✅</span>
+        <span class="role-tile-name">QC</span>
+      </div>
+    </div>
+    <div id="mechSelField" style="display:none">
+      <div class="field"><label>Ton profil</label><select class="fi" id="loginMechSel"></select></div>
+    </div>
+    <div class="field"><label>Mot de passe</label><input class="fi" type="password" id="loginPass" placeholder="••••••••"></div>
+    <div style="margin-top:14px"><button class="btn btn-primary" style="width:100%;justify-content:center" onclick="doLogin()">Accéder →</button></div>
+    <div style="margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--muted2);text-align:center">Admin: 0000 &nbsp;|&nbsp; QC: 9999 &nbsp;|&nbsp; Mécaniciens: 1234</div>
+  </div>
+</div>
+
+<!-- ════════════════════════
+     ADMIN SCREEN
+════════════════════════ -->
+<div class="screen" id="adminScreen">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="topbar-brand">CYCLO<em>NOVA</em></div>
+      <span class="tbadge admin">ADMIN</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green)"><span class="live-dot"></span>LIVE</span>
+    </div>
+    <div class="topbar-kpis">
+      <div class="tkpi"><div class="tkpi-v" id="aKpDone">0</div><div class="tkpi-l">FAITS</div></div>
+      <div class="tkpi"><div class="tkpi-v g" id="aKpValid">0</div><div class="tkpi-l">VALIDÉS QC</div></div>
+      <div class="tkpi"><div class="tkpi-v p" id="aKpPending">0</div><div class="tkpi-l">EN ATTENTE QC</div></div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-primary btn-sm" onclick="openOvlAssign()">+ Assigner</button>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Quitter</button>
+    </div>
+  </div>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="nav-sec">
+        <div class="nav-sec-title">Navigation</div>
+        <div class="nav-item on" onclick="showView('vTeam',this)"><span class="nav-icon">🔧</span>Équipe</div>
+        <div class="nav-item" onclick="showView('vAssign',this)"><span class="nav-icon">📋</span>Assigner</div>
+        <div class="nav-item" onclick="showView('vStats',this)"><span class="nav-icon">📊</span>Stats</div>
+        <div class="nav-item" onclick="showView('vManage',this)"><span class="nav-icon">👥</span>Gérer</div>
+        <div class="nav-item" onclick="logout()" style="color:var(--red)"><span class="nav-icon">🚪</span>Exit</div>
+      </div>
+      <div class="nav-sec">
+        <div class="nav-sec-title">Niveaux</div>
+        <div class="side-lvls" id="sideLvls"></div>
+      </div>
+      <div class="side-bottom" id="sideBottom">
+        <div class="sbt-row"><span class="sbt-l">FAIT</span><span class="sbt-v" id="sbDone">0</span></div>
+        <div class="sbt-row"><span class="sbt-l">QC OK</span><span class="sbt-v" id="sbValid" style="color:var(--green)">0</span></div>
+        <div class="sbt-row"><span class="sbt-l">EN ATTENTE</span><span class="sbt-v" id="sbPend" style="color:var(--pending-color)">0</span></div>
+      </div>
+      <div class="s-foot">Mis à jour il y a <span id="lastUpd">0</span>min</div>
+    </aside>
+
+    <div class="main-content">
+      <!-- TEAM -->
+      <div class="cview on" id="vTeam">
+        <div class="vhd">
+          <div><div class="vhd-title">Planning du jour</div><div class="vhd-sub" id="teamSub">—</div></div>
+          <div class="filter-row">
+            <button class="fbtn on" onclick="setFilter('tous',this)">Tous</button>
+            <button class="fbtn" onclick="setFilter('occupe',this)">Occupés</button>
+            <button class="fbtn" onclick="setFilter('libre',this)">Libres</button>
+          </div>
+        </div>
+        <div class="mgrid" id="teamGrid"></div>
+      </div>
+
+      <!-- ASSIGN -->
+      <div class="cview" id="vAssign">
+        <div class="vhd"><div><div class="vhd-title">Assigner une mission</div><div class="vhd-sub">Couleur + numéro de vélo</div></div></div>
+        <div style="background:var(--panel);border:1px solid var(--border);border-radius:4px;padding:24px;max-width:560px">
+          <div class="field"><label>Mécanicien</label><select class="fi" id="vaMech"></select></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="field"><label>Couleur</label>
+              <select class="fi" id="vaClr">
+                <option value="vert">🟢 Vert</option><option value="jaune">🟡 Jaune</option>
+                <option value="orange">🟠 Orange</option><option value="rouge">🔴 Rouge</option>
+                <option value="rz">⛔ Redzone</option>
+              </select>
+            </div>
+            <div class="field"><label>N° Vélo</label><input class="fi" id="vaId" placeholder="ex: MQ76" oninput="this.value=this.value.toUpperCase()"></div>
+            <div class="field"><label>Type</label>
+              <select class="fi" id="vaTy">
+                <option value="">Standard</option><option value="qc">QC</option>
+                <option value="sav">SAV</option><option value="zo">Zone Orange</option>
+              </select>
+            </div>
+            <div class="field"><label>Priorité</label>
+              <select class="fi" id="vaPri"><option value="normal">Normale</option><option value="urgent">🔥 Urgente</option></select>
+            </div>
+          </div>
+          <div style="margin-top:14px"><button class="btn btn-primary" onclick="submitViewAssign()">Confirmer la mission →</button></div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="cview" id="vStats">
+        <div class="vhd"><div><div class="vhd-title">Stats en direct</div></div></div>
+        <div class="stats-kpis" id="statsKpis"></div>
+        <div class="lb" id="lbFull"></div>
+      </div>
+
+      <!-- MANAGE -->
+      <div class="cview" id="vManage">
+        <div class="vhd">
+          <div><div class="vhd-title">Gérer l'équipe</div></div>
+          <button class="btn btn-green btn-sm" onclick="document.getElementById('ovlAddMech').classList.add('open')">+ Nouveau mécanicien</button>
+        </div>
+        <div class="manage-grid" id="manageGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════
+     QC SCREEN
+════════════════════════ -->
+<div class="screen" id="qcScreen">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="topbar-brand">CYCLO<em>NOVA</em></div>
+      <span class="tbadge qc">CONTRÔLE QUALITÉ</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--green)"><span class="live-dot"></span>LIVE</span>
+    </div>
+    <div class="topbar-kpis">
+      <div class="tkpi"><div class="tkpi-v p" id="qKpPending">0</div><div class="tkpi-l">EN ATTENTE</div></div>
+      <div class="tkpi"><div class="tkpi-v g" id="qKpValid">0</div><div class="tkpi-l">VALIDÉS</div></div>
+      <div class="tkpi"><div class="tkpi-v" id="qKpRefused" style="color:var(--red)">0</div><div class="tkpi-l">REFUSÉS</div></div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Quitter</button>
+    </div>
+  </div>
+
+  <div class="qc-player-layout">
+    <div class="qc-banner">
+      <span class="qc-banner-icon">✅</span>
+      <div class="qc-banner-txt">
+        <div class="t">File d'attente QC</div>
+        <div class="s">Valide ou refuse chaque vélo avant qu'il soit comptabilisé</div>
+      </div>
+    </div>
+
+    <div class="qc-stats-row" id="qcStatsRow"></div>
+    <div class="qc-queue" id="qcQueue"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════
+     MECHANIC SCREEN
+════════════════════════ -->
+<div class="screen" id="mechScreen">
+  <div class="player-hdr">
+    <div class="player-profile">
+      <div class="player-av" id="pAv">🔧</div>
+      <div>
+        <div class="player-nm" id="pName">—</div>
+        <div class="player-ttl" id="pTitle">—</div>
+      </div>
+    </div>
+    <div class="player-hud">
+      <div class="ph-stat"><div class="ph-v" id="pHDone">0</div><div class="ph-l">COCHÉS</div></div>
+      <div class="ph-stat"><div class="ph-v g" id="pHValid" style="color:var(--green)">0</div><div class="ph-l">VALIDÉS QC</div></div>
+      <div class="ph-stat"><div class="ph-v" id="pHXp" style="color:var(--yellow)">0</div><div class="ph-l">XP</div></div>
+      <button class="btn btn-ghost btn-sm" onclick="logout()">Quitter</button>
+    </div>
+  </div>
+
+  <div class="xp-banner">
+    <div class="xp-lvl-badge" id="xpLvlBadge">LVL 1</div>
+    <div class="xp-lbl-big" id="xpLbl">0 / 100 XP</div>
+    <div class="xp-track-big"><div class="xp-fill-big" id="xpFill" style="width:0%"></div></div>
+    <div class="xp-pct-lbl" id="xpPct">0%</div>
+  </div>
+
+  <div class="player-layout">
+    <div>
+      <div class="missions-title">⚡ Mes missions du jour</div>
+      <div id="missionsList"></div>
+    </div>
+    <div class="right-col">
+      <div class="panel-card">
+        <div class="pc-hd"><span>📊</span><span class="pc-title">Mon score</span></div>
+        <div class="sc-row"><span class="sc-lbl">COCHÉS</span><span class="sc-val or" id="scDone">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">VALIDÉS QC</span><span class="sc-val hi" id="scValid">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">EN ATTENTE QC</span><span class="sc-val pu" id="scPend">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">XP TOTAL</span><span class="sc-val yw" id="scXp">0</span></div>
+        <div class="sc-row"><span class="sc-lbl">NIVEAU</span><span class="sc-val or" id="scLvl">1</span></div>
+      </div>
+      <div class="panel-card">
+        <div class="pc-hd"><span>🏆</span><span class="pc-title">Classement</span></div>
+        <div id="lbMini"></div>
+      </div>
+      <div class="panel-card">
+        <div class="pc-hd"><span>🏅</span><span class="pc-title">Achievements</span></div>
+        <div class="ach-grid" id="achGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════ CONSTANTS ═══════════════
+const XP_LEVELS=[0,100,250,450,700,1000,1400,1900,2500,3200,4000];
+const LVL_TITLES=['Débutant','Stagiaire','Technicien','Expert','Maître','Référent','Senior','Chef Méca','Légende','Élite','Boss'];
+const XP_BIKE={vert:10,jaune:20,orange:35,rouge:50,rz:80};
+const LEVEL_DATA=[
+  {key:'vert',  label:'Vert',    dot:'#2ecc71',color:'#2ecc71'},
+  {key:'jaune', label:'Jaune',   dot:'#f5a623',color:'#f5a623'},
+  {key:'orange',label:'Orange',  dot:'#e67e22',color:'#e67e22'},
+  {key:'rouge', label:'Rouge',   dot:'#e74c3c',color:'#e74c3c'},
+  {key:'rz',    label:'Rz/Diag',dot:'#c0392b',color:'#c0392b'},
+];
+const ACHIEVEMENTS=[
+  {id:'first', icon:'🔧',name:'1er vélo',   check:m=>m.totalDone>=1},
+  {id:'five',  icon:'⚡',name:'×5 validés', check:m=>m.validatedToday>=5},
+  {id:'ten',   icon:'🔥',name:'10 validés', check:m=>m.totalDone>=10},
+  {id:'rz',    icon:'💀',name:'Redzone',    check:m=>m.rzDone>=1},
+  {id:'streak',icon:'🌟',name:'Série ×3',  check:m=>m.streak>=3},
+  {id:'lv5',   icon:'🏆',name:'Niveau 5',  check:m=>m.level>=5},
+];
+
+// ═══════════════ DATA ═══════════════
+let mechanics=[
+  {id:'alex',   name:'Alex',   pass:'1234',avatar:'👨‍🔧',xp:320,level:3,bikes:[],status:'libre',streak:1,totalDone:12,validatedToday:0,todayDone:0,rzDone:0},
+  {id:'sam',    name:'Sam',    pass:'1234',avatar:'🔧',   xp:180,level:2,bikes:[],status:'libre',streak:2,totalDone:7, validatedToday:0,todayDone:0,rzDone:0},
+  {id:'jordan', name:'Jordan', pass:'1234',avatar:'🛠️',  xp:450,level:4,bikes:[],status:'libre',streak:3,totalDone:19,validatedToday:0,todayDone:0,rzDone:2},
+  {id:'morgan', name:'Morgan', pass:'1234',avatar:'⚙️',  xp:90, level:1,bikes:[],status:'libre',streak:0,totalDone:3, validatedToday:0,todayDone:0,rzDone:0},
+  {id:'taylor', name:'Taylor', pass:'1234',avatar:'🚴',  xp:560,level:5,bikes:[],status:'libre',streak:5,totalDone:28,validatedToday:0,todayDone:0,rzDone:4},
+  {id:'riley',  name:'Riley',  pass:'1234',avatar:'🥷',   xp:200,level:2,bikes:[],status:'libre',streak:1,totalDone:8, validatedToday:0,todayDone:0,rzDone:1},
+  {id:'charlie',name:'Charlie',pass:'1234',avatar:'👩‍🔧',xp:380,level:3,bikes:[],status:'occupe',streak:4,totalDone:15,validatedToday:0,todayDone:0,rzDone:1},
+  {id:'casey',  name:'Casey',  pass:'1234',avatar:'🏍️',  xp:140,level:2,bikes:[],status:'libre',streak:0,totalDone:5, validatedToday:0,todayDone:0,rzDone:0},
+];
+// bike statuses: 'todo' | 'pending' (mecano coché, attente QC) | 'validated' | 'refused'
+const ADMIN_PASS='0000', QC_PASS='9999';
+let currentUser=null,currentRole=null,selectedRole=null,pickedAv='👨‍🔧';
+let filterMode='tous',lastUpdMin=0;
+
+// ═══════════════ LOGIN ═══════════════
+function selectRole(r){
+  selectedRole=r;
+  ['rAdmin','rMech','rQC'].forEach(id=>document.getElementById(id).classList.remove('sel','sel-qc'));
+  if(r==='admin')document.getElementById('rAdmin').classList.add('sel');
+  else if(r==='mech')document.getElementById('rMech').classList.add('sel');
+  else document.getElementById('rQC').classList.add('sel-qc');
+  const mf=document.getElementById('mechSelField');
+  mf.style.display=r==='mech'?'block':'none';
+  if(r==='mech')document.getElementById('loginMechSel').innerHTML=mechanics.map(m=>`<option value="${m.id}">${m.avatar} ${m.name}</option>`).join('');
+}
+function doLogin(){
+  const pass=document.getElementById('loginPass').value;
+  if(!selectedRole){showToast('Erreur','Choisis un rôle',true);return;}
+  if(selectedRole==='admin'){
+    if(pass!==ADMIN_PASS){showToast('Erreur','Mot de passe incorrect',true);return;}
+    currentRole='admin';showAdminScreen();
+  }else if(selectedRole==='qc'){
+    if(pass!==QC_PASS){showToast('Erreur','Mot de passe incorrect',true);return;}
+    currentRole='qc';showQCScreen();
+  }else{
+    const id=document.getElementById('loginMechSel').value;
+    const m=mechanics.find(x=>x.id===id);
+    if(!m||pass!==m.pass){showToast('Erreur','Mot de passe incorrect',true);return;}
+    currentRole='mech';currentUser=m;showMechScreen();
+  }
+}
+function logout(){
+  currentUser=null;currentRole=null;selectedRole=null;
+  document.getElementById('loginPass').value='';
+  ['rAdmin','rMech','rQC'].forEach(id=>document.getElementById(id).classList.remove('sel','sel-qc'));
+  document.getElementById('mechSelField').style.display='none';
+  showScreen('loginScreen');
+}
+
+// ═══════════════ SCREENS ═══════════════
+function showScreen(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function showAdminScreen(){showScreen('adminScreen');renderAdmin();}
+function showQCScreen(){showScreen('qcScreen');renderQC();}
+function showMechScreen(){showScreen('mechScreen');renderMech();}
+
+// ═══════════════ ADMIN ═══════════════
+function getAllBikes(){return mechanics.flatMap(m=>m.bikes);}
+function renderAdmin(){
+  const all=getAllBikes();
+  const pending=all.filter(b=>b.status==='pending').length;
+  const validated=all.filter(b=>b.status==='validated').length;
+  const done=all.filter(b=>b.status==='pending'||b.status==='validated').length;
+  document.getElementById('aKpDone').textContent=done;
+  document.getElementById('aKpValid').textContent=validated;
+  document.getElementById('aKpPending').textContent=pending;
+  document.getElementById('sbDone').textContent=done;
+  document.getElementById('sbValid').textContent=validated;
+  document.getElementById('sbPend').textContent=pending;
+
+  // Sidebar level rows
+  let lvHTML='';
+  LEVEL_DATA.forEach(lv=>{
+    const lb=all.filter(b=>b.level===lv.key);
+    const ld=lb.filter(b=>b.status==='validated').length;
+    const lp=lb.length;
+    const pc=lp>0?Math.round(ld/lp*100):0;
+    lvHTML+=`<div class="slv-row"><div class="slv-top"><div class="slv-dot" style="background:${lv.dot}"></div><div class="slv-name">${lv.label}</div><div class="slv-num">${ld}/${lp}</div></div><div class="slv-bar"><div class="slv-fill" style="background:${lv.color};width:${pc}%"></div></div></div>`;
+  });
+  document.getElementById('sideLvls').innerHTML=lvHTML;
+
+  const mechOpts=mechanics.map(m=>`<option value="${m.id}">${m.avatar} ${m.name}</option>`).join('');
+  ['aMech','vaMech'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=mechOpts;});
+
+  renderTeamGrid();
+  renderStatsView();
+  renderManageGrid();
+  const active=mechanics.filter(m=>m.bikes.length>0).length;
+  document.getElementById('teamSub').textContent=`${active} mécanicien${active>1?'s':''} actif${active>1?'s':''}`;
+}
+
+function mechCardHTML(m){
+  const done   =m.bikes.filter(b=>b.status!=='todo').length;
+  const valid  =m.bikes.filter(b=>b.status==='validated').length;
+  const pending=m.bikes.filter(b=>b.status==='pending').length;
+  const tot    =m.bikes.length;
+  const pct    =tot>0?Math.round(valid/tot*100):0;
+  const rateCls=pct>=80?'ok':pct>=40?'mid':'low';
+  const fullCls=pct===100&&tot>0?'full':'';
+  const xpNext =XP_LEVELS[Math.min(m.level,10)];
+  const xpPct  =xpNext>0?Math.min(100,Math.round(m.xp/xpNext*100)):100;
+  const stripeCls=m.status==='occupe'?'busy':m.status==='pause'?'pause':'free';
+
+  const bikesHTML=m.bikes.length===0?`<div class="no-bikes">Aucune mission assignée</div>`:
+    m.bikes.map((b,i)=>{
+      const statusIcon=b.status==='todo'?'':b.status==='pending'?'⏳':b.status==='validated'?'✓':'✕';
+      const checkCls=b.status==='todo'?'':b.status==='pending'?'checked':b.status==='validated'?'validated':'blocked';
+      const tag=b.type?`<span class="bike-type-tag ${b.type}">${b.type.toUpperCase()}</span>`:'';
+      const urgTag=b.priority==='urgent'?`<span style="font-size:10px">🔥</span>`:'';
+      return `<div class="bike-item">
+        <div class="bike-label">
+          <span class="bike-clr ${b.level}">${b.level.toUpperCase()}</span>
+          <span class="bike-id-txt">#${b.id}</span>
+          ${tag}${urgTag}
+        </div>
+        <div class="bike-status-dot ${b.status}" title="${b.status}"></div>
+        <button class="check-btn ${checkCls}" onclick="adminCycle('${m.id}',${i})" title="Changer statut">${statusIcon}</button>
+        <button class="bike-del" onclick="adminDel('${m.id}',${i})">✕</button>
+      </div>`;
+    }).join('');
+
+  const pendingBadge=pending>0?`<span class="qc-pending-badge">⏳ ${pending} en attente QC</span>`:'';
+
+  return `<div class="mcard" id="mc-${m.id}">
+    <div class="mcard-stripe ${stripeCls}"></div>
+    <div class="mcard-hd">
+      <div class="mcard-av">${m.avatar}</div>
+      <div class="mcard-inf">
+        <div class="mcard-nm">${m.name}${pendingBadge}</div>
+        <div class="mcard-ttl">LVL ${m.level} — ${LVL_TITLES[Math.min(m.level,10)]}</div>
+      </div>
+      <div class="st-pill ${m.status}" onclick="adminCycleSt('${m.id}')" title="Changer statut"><div class="s-dot"></div>${m.status.charAt(0).toUpperCase()+m.status.slice(1)}</div>
+    </div>
+    <div class="mcard-xp">
+      <div class="xp-row">
+        <span class="xp-lbl">XP ${m.xp}</span>
+        <div class="xp-track"><div class="xp-fill" style="width:${xpPct}%"></div></div>
+        <span class="xp-next">→LV${m.level+1}</span>
+      </div>
+    </div>
+    <div class="mcard-prog">
+      <div class="prog-row">
+        <span class="prog-lbl">QC Validés</span>
+        <div class="prog-nn"><span class="pn-d">${valid}</span><span class="pn-s">/</span><span class="pn-t">${tot}</span></div>
+        <div class="prog-bar"><div class="prog-fill ${fullCls}" style="width:${pct}%"></div></div>
+        <span class="prog-pct ${pct>=80?'ok':''}">${pct}%</span>
+      </div>
+    </div>
+    <div class="mcard-bikes">
+      <div class="bikes-hd"><span>Vélos — Couleur + N°</span><span>Statut</span></div>
+      ${bikesHTML}
+      <button class="add-mis-btn" onclick="quickAssign('${m.id}')">＋ Ajouter un vélo</button>
+    </div>
+    <div class="mcard-ft">
+      <span class="mft-xp">⭐ ${m.xp} XP</span>
+      <span class="mft-rt ${rateCls}">${valid}/${tot} validés — ${pct}%</span>
+    </div>
+  </div>`;
+}
+
+function renderTeamGrid(){
+  const filtered=mechanics.filter(m=>filterMode==='tous'?true:filterMode==='occupe'?m.status==='occupe':m.status!=='occupe');
+  document.getElementById('teamGrid').innerHTML=filtered.map(m=>mechCardHTML(m)).join('');
+}
+function setFilter(mode,btn){filterMode=mode;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');renderTeamGrid();}
+
+function reloadCard(id){
+  const el=document.getElementById('mc-'+id);
+  if(!el){renderTeamGrid();return;}
+  const m=mechanics.find(x=>x.id===id);
+  const tmp=document.createElement('div');
+  tmp.innerHTML=mechCardHTML(m);
+  el.replaceWith(tmp.firstElementChild);
+  renderAdmin();
+}
+
+function renderStatsView(){
+  const all=getAllBikes();
+  const validated=all.filter(b=>b.status==='validated').length;
+  const pending=all.filter(b=>b.status==='pending').length;
+  const tot=all.length;
+  const pct=tot>0?Math.round(validated/tot*100):0;
+  const topM=mechanics.reduce((a,b)=>a.xp>b.xp?a:b,mechanics[0]);
+  document.getElementById('statsKpis').innerHTML=`
+    <div class="kpi-card"><div class="kpi-card-val" style="color:var(--orange)">${tot}</div><div class="kpi-card-lbl">MISSIONS TOTALES</div></div>
+    <div class="kpi-card"><div class="kpi-card-val" style="color:var(--pending-color)">${pending}</div><div class="kpi-card-lbl">EN ATTENTE QC</div></div>
+    <div class="kpi-card"><div class="kpi-card-val" style="color:var(--green)">${validated}</div><div class="kpi-card-lbl">VALIDÉS QC</div></div>
+    <div class="kpi-card"><div class="kpi-card-val" style="color:var(--blue)">${pct}%</div><div class="kpi-card-lbl">TAUX VALIDATION</div></div>
+    <div class="kpi-card"><div class="kpi-card-val" style="color:var(--yellow)">${mechanics.length}</div><div class="kpi-card-lbl">MÉCANICIENS</div></div>
+    <div class="kpi-card"><div class="kpi-card-val" style="color:var(--yellow);font-size:20px">${topM?.name||'—'}</div><div class="kpi-card-lbl">MEILLEUR XP</div></div>`;
+  const sorted=[...mechanics].sort((a,b)=>b.xp-a.xp);
+  const maxXp=sorted[0]?.xp||1;
+  const ri=['🥇','🥈','🥉'];
+  document.getElementById('lbFull').innerHTML=`
+    <div class="lb-hd"><span>🏆</span><span class="lb-hd-t">Classement général</span></div>
+    ${sorted.map((m,i)=>`<div class="lb-row">
+      <span class="lb-rank ${i===0?'gold':i===1?'silver':i===2?'bronze':''}">${ri[i]||'#'+(i+1)}</span>
+      <span class="lb-av">${m.avatar}</span>
+      <span class="lb-nm">${m.name}</span>
+      <span class="lb-lv">Lv.${m.level} ${LVL_TITLES[Math.min(m.level,10)]}</span>
+      <div class="lb-bar-w"><div class="lb-bar"><div class="lb-fill" style="width:${Math.round(m.xp/maxXp*100)}%"></div></div></div>
+      <span class="lb-xp">⭐${m.xp}</span>
+    </div>`).join('')}`;
+}
+
+function renderManageGrid(){
+  document.getElementById('manageGrid').innerHTML=mechanics.map(m=>`
+    <div class="manage-card">
+      <div class="manage-av">${m.avatar}</div>
+      <div class="manage-nm">${m.name}</div>
+      <div class="manage-lv">Lv.${m.level} — ⭐${m.xp} XP</div>
+      <div class="manage-btns">
+        <button class="btn btn-primary btn-xs" onclick="quickAssign('${m.id}')">Mission</button>
+        <button class="btn btn-red btn-xs" onclick="removeMech('${m.id}')">Retirer</button>
+      </div>
+    </div>`).join('');
+}
+
+// ADMIN BIKE ACTIONS
+function adminCycle(mechId,idx){
+  const m=mechanics.find(x=>x.id===mechId);
+  const b=m.bikes[idx];
+  // Admin can force cycle through all states
+  const c=['todo','pending','validated','refused'];
+  b.status=c[(c.indexOf(b.status)+1)%c.length];
+  if(b.status==='validated'){
+    const xp=XP_BIKE[b.level]||10;
+    addXP(m,xp);
+    m.validatedToday++;m.totalDone++;
+    if(b.level==='rz')m.rzDone++;
+    showToast(`✓ Vélo ${b.id} validé`,`+${xp} XP pour ${m.name}`);
+  }
+  reloadCard(mechId);
+}
+function adminDel(mechId,idx){
+  if(!confirm('Supprimer cette mission ?'))return;
+  mechanics.find(x=>x.id===mechId).bikes.splice(idx,1);
+  reloadCard(mechId);
+}
+function adminCycleSt(id){
+  const m=mechanics.find(x=>x.id===id);
+  const c=['libre','occupe','pause'];
+  m.status=c[(c.indexOf(m.status)+1)%c.length];
+  reloadCard(id);
+}
+function quickAssign(id){
+  const el=document.getElementById('aMech');
+  if(el)el.value=id;
+  openOvlAssign();
+}
+function openOvlAssign(){
+  document.getElementById('aMech').innerHTML=mechanics.map(m=>`<option value="${m.id}">${m.avatar} ${m.name}</option>`).join('');
+  document.getElementById('aId').value='';
+  document.getElementById('ovlAssign').classList.add('open');
+  setTimeout(()=>document.getElementById('aId').focus(),100);
+}
+function submitAssign(){
+  const mechId=document.getElementById('aMech').value;
+  const vid=document.getElementById('aId').value.trim().toUpperCase();
+  if(!vid){document.getElementById('aId').style.borderColor='var(--red)';return;}
+  const m=mechanics.find(x=>x.id===mechId);
+  m.bikes.push({id:vid,level:document.getElementById('aClr').value,type:document.getElementById('aTy').value,priority:document.getElementById('aPri').value,status:'todo'});
+  if(m.status==='libre')m.status='occupe';
+  closeOvl('ovlAssign');
+  showToast('Mission assignée',`${document.getElementById('aClr').options[document.getElementById('aClr').selectedIndex].text.replace(/./u,'').trim()} #${vid} → ${m.name}`);
+  renderAdmin();
+}
+function submitViewAssign(){
+  const mechId=document.getElementById('vaMech').value;
+  const vid=document.getElementById('vaId').value.trim().toUpperCase();
+  if(!vid)return;
+  const m=mechanics.find(x=>x.id===mechId);
+  m.bikes.push({id:vid,level:document.getElementById('vaClr').value,type:document.getElementById('vaTy').value,priority:document.getElementById('vaPri').value,status:'todo'});
+  if(m.status==='libre')m.status='occupe';
+  document.getElementById('vaId').value='';
+  showToast('Mission assignée',`${vid} → ${m.name}`);
+  renderAdmin();
+}
+
+// ═══════════════ QC VIEW ═══════════════
+function renderQC(){
+  const all=getAllBikes();
+  const pending=all.filter(b=>b.status==='pending');
+  const validated=all.filter(b=>b.status==='validated').length;
+  const refused=all.filter(b=>b.status==='refused').length;
+
+  document.getElementById('qKpPending').textContent=pending.length;
+  document.getElementById('qKpValid').textContent=validated;
+  document.getElementById('qKpRefused').textContent=refused;
+
+  // Stats row
+  document.getElementById('qcStatsRow').innerHTML=`
+    <div class="qc-stat"><div class="qc-stat-val" style="color:var(--pending-color)">${pending.length}</div><div class="qc-stat-lbl">EN ATTENTE</div></div>
+    <div class="qc-stat"><div class="qc-stat-val" style="color:var(--green)">${validated}</div><div class="qc-stat-lbl">VALIDÉS</div></div>
+    <div class="qc-stat"><div class="qc-stat-val" style="color:var(--red)">${refused}</div><div class="qc-stat-lbl">REFUSÉS</div></div>`;
+
+  if(pending.length===0){
+    document.getElementById('qcQueue').innerHTML=`
+      <div class="qc-empty">
+        <span class="qc-empty-icon">✅</span>
+        <div class="qc-empty-txt">File d'attente vide !<br>Tous les vélos sont traités.</div>
+      </div>`;
+    return;
+  }
+
+  // Build queue: find which mechanic + bike index for each pending
+  const queue=[];
+  mechanics.forEach(m=>{
+    m.bikes.forEach((b,idx)=>{
+      if(b.status==='pending')queue.push({m,b,idx});
+    });
+  });
+
+  document.getElementById('qcQueue').innerHTML=queue.map(({m,b,idx},qi)=>`
+    <div class="qc-card" id="qccard-${m.id}-${idx}">
+      <div class="qc-card-info">
+        <div class="qc-card-top">
+          <span class="qc-mech-name">${m.avatar} ${m.name}</span>
+          <div class="qc-bike-badge">
+            <span class="qc-bike-clr bike-clr ${b.level}">${b.level.toUpperCase()}</span>
+            <span class="qc-bike-id">#${b.id}</span>
+            ${b.type?`<span class="bike-type-tag ${b.type}">${b.type.toUpperCase()}</span>`:''}
+            ${b.priority==='urgent'?'<span style="font-size:12px">🔥</span>':''}
+          </div>
+        </div>
+        <div class="qc-card-sub">En attente de validation QC — ${LVL_TITLES[Math.min(m.level,10)]} · Lv.${m.level}</div>
+      </div>
+      <div class="qc-actions">
+        <button class="qc-validate-btn ko" onclick="qcAction('${m.id}',${idx},false)">✕ Refuser</button>
+        <button class="qc-validate-btn ok" onclick="qcAction('${m.id}',${idx},true)">✓ Valider</button>
+      </div>
+    </div>`).join('');
+}
+
+function qcAction(mechId,bikeIdx,approve){
+  const m=mechanics.find(x=>x.id===mechId);
+  const b=m.bikes[bikeIdx];
+  if(approve){
+    b.status='validated';
+    const xp=XP_BIKE[b.level]||10;
+    addXP(m,xp);
+    m.validatedToday++;m.totalDone++;
+    if(b.level==='rz')m.rzDone++;
+    spawnFloat(xp);
+    showToast(`✓ Vélo #${b.id} validé !`,`+${xp} XP accordé à ${m.name}`);
+  }else{
+    b.status='refused';
+    showToast(`✕ Vélo #${b.id} refusé`,`Renvoyé à ${m.name} pour correction`,'warn');
+  }
+  renderQC();
+  // Also refresh admin if open
+  if(currentRole==='admin')renderAdmin();
+}
+
+// ═══════════════ MECHANIC VIEW ═══════════════
+function renderMech(){
+  const m=currentUser;
+  document.getElementById('pAv').textContent=m.avatar;
+  document.getElementById('pName').textContent=m.name.toUpperCase();
+  document.getElementById('pTitle').textContent=LVL_TITLES[Math.min(m.level,10)];
+  const checked=m.bikes.filter(b=>b.status!=='todo').length;
+  const validated=m.bikes.filter(b=>b.status==='validated').length;
+  const pending=m.bikes.filter(b=>b.status==='pending').length;
+  document.getElementById('pHDone').textContent=checked;
+  document.getElementById('pHValid').textContent=validated;
+  document.getElementById('pHXp').textContent=m.xp;
+  // XP bar
+  const xpNext=XP_LEVELS[Math.min(m.level,10)];
+  const xpPct=xpNext>0?Math.min(100,Math.round(m.xp/xpNext*100)):100;
+  document.getElementById('xpLvlBadge').textContent=`LVL ${m.level}`;
+  document.getElementById('xpLbl').textContent=`${m.xp} / ${xpNext} XP`;
+  document.getElementById('xpFill').style.width=xpPct+'%';
+  document.getElementById('xpPct').textContent=xpPct+'%';
+  // Score
+  document.getElementById('scDone').textContent=checked;
+  document.getElementById('scValid').textContent=validated;
+  document.getElementById('scPend').textContent=pending;
+  document.getElementById('scXp').textContent=m.xp;
+  document.getElementById('scLvl').textContent=m.level;
+  renderMissions();renderLbMini();renderAch();
+}
+
+function renderMissions(){
+  const m=currentUser;
+  if(!m.bikes.length){
+    document.getElementById('missionsList').innerHTML=`<div class="no-missions"><span class="no-mis-icon">🔧</span><div class="no-mis-txt">Aucune mission pour aujourd'hui.<br>En attente des instructions de l'admin.</div></div>`;
+    return;
+  }
+  const STARS={vert:'★',jaune:'★★',orange:'★★★',rouge:'★★★★',rz:'★★★★★'};
+  const DESC={vert:'Inspection & réglages standards',jaune:'Contrôle complet du véhicule',orange:'Diagnostic et réparation avancée',rouge:'Révision majeure urgente',rz:'⚠ REDZONE — Intervention critique'};
+  document.getElementById('missionsList').innerHTML=m.bikes.map((b,i)=>{
+    const xp=XP_BIKE[b.level]||10;
+    const checkCls=b.status==='pending'?'pending':b.status==='validated'?'validated':b.status==='refused'?'blocked':'';
+    const checkIcon=b.status==='pending'?'⏳':b.status==='validated'?'✓':b.status==='refused'?'✕':'';
+    const statusTxt=b.status==='todo'?'Coche quand terminé':b.status==='pending'?'En attente QC...':b.status==='validated'?'✓ Validé par QC !':'✕ Refusé — à refaire';
+    const tag=b.type?`<span class="bike-type-tag ${b.type}">${b.type.toUpperCase()}</span>`:'';
+    const urg=b.priority==='urgent'?'<span style="font-size:10px">🔥</span>':'';
+    const canCheck=b.status==='todo'||b.status==='refused';
+    return `<div class="mission-card ${b.status==='pending'?'pending':b.status==='validated'?'validated':b.status==='refused'?'blocked':''}">
+      <div class="mc-top">
+        <span class="mc-lv bike-clr ${b.level}">${STARS[b.level]||'★'}</span>
+        <span class="mc-id-badge">${b.level.charAt(0).toUpperCase()+b.level.slice(1)} #${b.id}</span>
+        ${tag}${urg}
+        <span class="mc-xp-badge">+${xp} XP</span>
+      </div>
+      <div class="mc-body">
+        <div class="mc-desc">${DESC[b.level]||'Réparation'}</div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+          <button class="big-check ${checkCls}" onclick="${canCheck?`playerCheck(${i})`:''}" ${!canCheck?'style="cursor:default"':''} title="${canCheck?'Cocher comme terminé':''}">
+            ${checkIcon}
+          </button>
+          <span class="mc-status-txt ${b.status}">${statusTxt}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function playerCheck(idx){
+  const m=currentUser;
+  const b=m.bikes[idx];
+  if(b.status!=='todo'&&b.status!=='refused')return;
+  b.status='pending'; // goes to QC queue
+  b.checkedAt=new Date().toISOString();
+  showToast('⏳ Envoyé au QC !',`Vélo #${b.id} en attente de validation`,'info');
+  renderMech();
+}
+
+function renderLbMini(){
+  const sorted=[...mechanics].sort((a,b)=>b.xp-a.xp);
+  const ri=['🥇','🥈','🥉'];
+  document.getElementById('lbMini').innerHTML=sorted.map((m,i)=>`
+    <div class="lbm-row ${m.id===currentUser?.id?'me':''}">
+      <span class="lbm-rank">${ri[i]||'#'+(i+1)}</span>
+      <span class="lbm-av">${m.avatar}</span>
+      <span class="lbm-nm">${m.name}${m.id===currentUser?.id?' ◀':''}</span>
+      <span class="lbm-xp">⭐${m.xp}</span>
+    </div>`).join('');
+}
+function renderAch(){
+  document.getElementById('achGrid').innerHTML=ACHIEVEMENTS.map(a=>{
+    const u=a.check(currentUser);
+    return `<div class="ach-cell ${u?'unlocked':''}"><span class="ach-emoji">${a.icon}</span><div class="ach-nm">${a.name}</div></div>`;
+  }).join('');
+}
+
+// ═══════════════ XP ═══════════════
+function addXP(m,amount){
+  m.xp+=amount;
+  const oldLv=m.level;
+  while(m.level<10&&m.xp>=XP_LEVELS[m.level])m.level++;
+  if(m.level>oldLv){
+    document.getElementById('lvlupMsg').textContent=`${m.name} passe au niveau ${m.level} — ${LVL_TITLES[m.level]} !`;
+    setTimeout(()=>document.getElementById('lvlOvl').classList.add('show'),400);
+  }
+}
+
+// ═══════════════ MANAGE ═══════════════
+function pickAv(el){document.querySelectorAll('.av-opt').forEach(e=>e.classList.remove('picked'));el.classList.add('picked');pickedAv=el.dataset.av;}
+function submitNewMech(){
+  const name=document.getElementById('nmName').value.trim();
+  const pass=document.getElementById('nmPass').value;
+  if(!name||!pass){showToast('Erreur','Remplis tous les champs',true);return;}
+  mechanics.push({id:'m_'+Date.now(),name,email:document.getElementById('nmEmail').value,pass,avatar:pickedAv,xp:0,level:1,bikes:[],status:'libre',streak:0,totalDone:0,validatedToday:0,todayDone:0,rzDone:0});
+  closeOvl('ovlAddMech');
+  document.getElementById('nmName').value='';
+  document.getElementById('nmEmail').value='';
+  document.getElementById('nmPass').value='';
+  showToast('Mécanicien ajouté',`${name} rejoint l'équipe !`);
+  renderAdmin();
+}
+function removeMech(id){
+  if(!confirm('Retirer ce mécanicien ?'))return;
+  mechanics=mechanics.filter(m=>m.id!==id);
+  renderAdmin();
+}
+
+// ═══════════════ VIEWS / TABS ═══════════════
+function showView(viewId,el){
+  document.querySelectorAll('.cview').forEach(v=>v.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on','qc-on'));
+  document.getElementById(viewId).classList.add('on');
+  el.classList.add('on');
+  if(viewId==='vStats')renderStatsView();
+  if(viewId==='vManage')renderManageGrid();
+}
+
+// ═══════════════ UTILS ═══════════════
+function closeOvl(id){document.getElementById(id).classList.remove('open');}
+let toastT;
+function showToast(title,msg,type){
+  clearTimeout(toastT);
+  const t=document.getElementById('toast');
+  t.className='toast'+(type===true||type==='warn'?' warn':type==='info'?' info':'');
+  document.getElementById('toastTitle').textContent=title;
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');
+  toastT=setTimeout(()=>t.classList.remove('show'),3500);
+}
+function spawnFloat(xp){
+  const el=document.createElement('div');
+  el.className='xp-float';
+  el.textContent=`+${xp} XP`;
+  el.style.left=(Math.random()*50+20)+'vw';
+  el.style.top=(Math.random()*20+35)+'vh';
+  document.body.appendChild(el);
+  setTimeout(()=>el.remove(),1300);
+}
+
+setInterval(()=>{lastUpdMin++;const el=document.getElementById('lastUpd');if(el)el.textContent=lastUpdMin;},60000);
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){document.querySelectorAll('.ovl').forEach(o=>o.classList.remove('open'));document.getElementById('lvlOvl').classList.remove('show');}
+  if(e.key==='Enter'&&document.getElementById('loginScreen').classList.contains('active'))doLogin();
+});
+</script>
+</body>
+</html>
